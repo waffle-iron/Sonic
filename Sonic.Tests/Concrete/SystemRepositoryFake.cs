@@ -18,11 +18,18 @@ namespace Sonic.Tests.Concrete
 
         public Domain.Entities.System GetById(int id)
         {
-            return storage.FirstOrDefault(p => p.Id == id);
+            return storage.FirstOrDefault(p => p.SystemId == id);
         }
 
         public bool Add(Domain.Entities.System item)
         {
+            foreach (Role role in item.Roles)
+            {
+                if (role.System == null)
+                {
+                    role.System = item;
+                }
+            }
             storage.Add(item);
 
             return true;
@@ -30,7 +37,14 @@ namespace Sonic.Tests.Concrete
 
         public bool Update(Domain.Entities.System item)
         {
-            Domain.Entities.System entity = storage.FirstOrDefault(p => p.Id == item.Id);
+            foreach (Role role in item.Roles)
+            {
+                if (role.System == null)
+                {
+                    role.System = item;
+                }
+            }
+            Domain.Entities.System entity = storage.FirstOrDefault(p => p.SystemId == item.SystemId);
             entity.Name = item.Name;
 
             return true;
@@ -38,7 +52,7 @@ namespace Sonic.Tests.Concrete
 
         public bool Remove(int id)
         {
-            Domain.Entities.System entity = storage.FirstOrDefault(p => p.Id == id);
+            Domain.Entities.System entity = storage.FirstOrDefault(p => p.SystemId == id);
             storage.Remove(entity);
 
             return true;

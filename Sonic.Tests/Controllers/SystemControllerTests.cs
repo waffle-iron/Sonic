@@ -22,8 +22,8 @@ namespace Sonic.Tests.Controllers
         public void index_get_all()
         {
             var controller = new SystemController(repository);
-            repository.Add(new Domain.Entities.System() { Id = 1, Name = "App 1" });
-            repository.Add(new Domain.Entities.System() { Id = 2, Name = "App 2" });
+            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
+            repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
 
             IActionResult result = controller.Index();
 
@@ -37,8 +37,8 @@ namespace Sonic.Tests.Controllers
         public void edit_redirect_to_action_if_id_does_not_exist()
         {
             var controller = new SystemController(repository);
-            repository.Add(new Domain.Entities.System() { Id = 1, Name = "App 1" });
-            repository.Add(new Domain.Entities.System() { Id = 2, Name = "App 2" });
+            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
+            repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
 
             IActionResult result = controller.Edit(3);
 
@@ -51,7 +51,7 @@ namespace Sonic.Tests.Controllers
         public void edit_get_by_id()
         {
             var controller = new SystemController(repository);
-            repository.Add(new Domain.Entities.System() { Id = 1, Name = "App 1" });
+            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
 
             IActionResult result = controller.Edit(1);
 
@@ -72,15 +72,15 @@ namespace Sonic.Tests.Controllers
             Domain.Entities.System model =
                 Assert.IsAssignableFrom<Domain.Entities.System>(viewResult.ViewData.Model);
             Assert.NotNull(model.Name);
-            Assert.Equal(0, model.Id);
+            Assert.Equal(0, model.SystemId);
         }
 
         [Fact]
         public void edit_post_add()
         {
             var controller = new SystemController(repository);
-            repository.Add(new Domain.Entities.System() { Id = 1, Name = "App 1" });
-            var entity = new Domain.Entities.System() { Id = 2, Name = "App 2" };
+            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
+            var entity = new Domain.Entities.System() { SystemId = 2, Name = "App 2" };
 
             IActionResult result = controller.Edit(entity);
 
@@ -95,9 +95,9 @@ namespace Sonic.Tests.Controllers
         public void edit_post_update()
         {
             var controller = new SystemController(repository);
-            repository.Add(new Domain.Entities.System() { Id = 1, Name = "App 1" });
-            repository.Add(new Domain.Entities.System() { Id = 2, Name = "App 2" });
-            var entity = new Domain.Entities.System() { Id = 2, Name = "Test" };
+            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
+            repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
+            var entity = new Domain.Entities.System() { SystemId = 2, Name = "Test" };
 
             IActionResult result = controller.Edit(entity);
 
@@ -111,8 +111,8 @@ namespace Sonic.Tests.Controllers
         public void edit_post_removing_spaces_for_the_name_field()
         {
             var controller = new SystemController(repository);
-            repository.Add(new Domain.Entities.System() { Id = 1, Name = "App 1" });
-            var entity = new Domain.Entities.System() { Id = 0, Name = "  App 2  " };
+            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
+            var entity = new Domain.Entities.System() { SystemId = 0, Name = "  App 2  " };
 
             IActionResult result = controller.Edit(entity);
 
@@ -122,7 +122,7 @@ namespace Sonic.Tests.Controllers
         [Fact]
         public void the_name_field_is_required()
         {
-            var entity = new Domain.Entities.System() { Id = 2, Name = "" };
+            var entity = new Domain.Entities.System() { SystemId = 2, Name = "" };
             var validationContext = new ValidationContext(entity, null, null);
             var validationResult = new List<ValidationResult>();
 
@@ -137,8 +137,8 @@ namespace Sonic.Tests.Controllers
         public void remove_post()
         {
             var controller = new SystemController(repository);
-            repository.Add(new Domain.Entities.System() { Id = 1, Name = "App 1" });
-            repository.Add(new Domain.Entities.System() { Id = 2, Name = "App 2" });
+            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
+            repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
 
             IActionResult result = controller.Delete(1);
 

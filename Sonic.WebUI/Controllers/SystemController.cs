@@ -26,7 +26,7 @@ namespace Sonic.WebUI.Controllers
         {
             if (id == 0)
             {
-                return View(new Domain.Entities.System() { Id = 0, Name = string.Empty });
+                return View(new Domain.Entities.System() { SystemId = 0, Name = string.Empty });
             }
 
             Domain.Entities.System entity = systemRepository.GetById(id);
@@ -44,7 +44,7 @@ namespace Sonic.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Domain.Entities.System entity = systemRepository.GetById(system.Id);
+                Domain.Entities.System entity = systemRepository.GetById(system.SystemId);
                 system.Name = system.Name.Trim();
                 if (entity == null)
                 {
