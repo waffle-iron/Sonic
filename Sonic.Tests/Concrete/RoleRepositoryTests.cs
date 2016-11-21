@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 namespace Sonic.Tests.Concrete
-{    
+{
     public class RoleRepositoryTests
     {
         private readonly ICrudRepository<Role> repository = null;

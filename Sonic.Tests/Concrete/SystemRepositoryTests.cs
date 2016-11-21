@@ -64,7 +64,7 @@ namespace Sonic.Tests.Concrete
         [Fact]
         public void add()
         {
-            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });            
+            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
 
             Assert.Equal(1, repository.GetAll().Count());
         }

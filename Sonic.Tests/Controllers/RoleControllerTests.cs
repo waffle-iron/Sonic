@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Sonic.Domain.Abstract;
 using Sonic.Domain.Entities;
 using Sonic.Tests.Concrete;
@@ -31,7 +32,7 @@ namespace Sonic.Tests.Controllers
             systemRepository.Add(systemApp1);
             systemRepository.Add(systemApp2);
 
-            var controller = new RoleController(repository, systemRepository);            
+            var controller = new RoleController(repository, systemRepository);
             repository.Add(new Role() { RoleId = 1, Name = "admin", SystemId = 1, System = systemApp1 });
             repository.Add(new Role() { RoleId = 2, Name = "user", SystemId = 1, System = systemApp1 });
             repository.Add(new Role() { RoleId = 3, Name = "adminTest", SystemId = 2, System = systemApp2 });
@@ -106,7 +107,7 @@ namespace Sonic.Tests.Controllers
         {
             var system = new Domain.Entities.System() { SystemId = 1, Name = "App 1" };
             systemRepository.Add(system);
-            var controller = new RoleController(repository, systemRepository);            
+            var controller = new RoleController(repository, systemRepository);
             var roleAdmin = new Role() { RoleId = 1, SystemId = 1, Name = "admin", System = system };
             repository.Add(roleAdmin);
 
@@ -202,7 +203,7 @@ namespace Sonic.Tests.Controllers
 
             IActionResult result = controller.Edit(entity);
 
-            Assert.Equal(entity.Name.Trim(), repository.GetById(2).Name);            
+            repository.GetById(2).Name.Should().Be(entity.Name.Trim());
         }
 
         [Fact]
@@ -212,14 +213,14 @@ namespace Sonic.Tests.Controllers
             var system = new Domain.Entities.System() { SystemId = 1, Name = "App 1" };
             systemRepository.Add(system);
             repository.Add(new Role() { RoleId = 1, Name = "admin", SystemId = 1, System = system });
-            repository.Add(new Role() { RoleId = 2, Name = "user", SystemId = 1, System = system });            
-                        
+            repository.Add(new Role() { RoleId = 2, Name = "user", SystemId = 1, System = system });
+
             IActionResult result = controller.Delete(2);
 
             RedirectToActionResult redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Role", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-            Assert.Equal(1, repository.GetAll().Count());
-        }        
+            redirectToActionResult.ControllerName.Should().Be("Role");
+            redirectToActionResult.ActionName.Should().Be("Index");
+            repository.GetAll().Should().HaveCount(1);
+        }
     }
 }

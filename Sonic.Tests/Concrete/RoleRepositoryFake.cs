@@ -26,12 +26,12 @@ namespace Sonic.Tests.Concrete
 
             return true;
         }
-                
+
         public bool Update(Role item)
         {
             Role entity = storage.FirstOrDefault(p => p.RoleId == item.RoleId);
             entity.Name = item.Name;
-            
+
             return true;
         }
 

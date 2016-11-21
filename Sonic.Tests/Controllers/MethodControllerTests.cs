@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sonic.Domain.Abstract;
 using Sonic.Domain.Entities;
+using Sonic.Tests.Concrete;
 using Sonic.WebUI.Controllers;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Sonic.Tests.Concrete
+namespace Sonic.Tests.Controllers
 {
-    public class MethodRepositoryTests
+    public class MethodControllerTests
     {
         private readonly ICrudRepository<Method> repository = null;
         private readonly ICrudRepository<Domain.Entities.System> systemRepository = null;
 
-        public MethodRepositoryTests()
+        public MethodControllerTests()
         {
             repository = new MethodRepositoryFake();
             systemRepository = new SystemRepositoryFake();

@@ -44,7 +44,7 @@ namespace Sonic.Tests.Controllers
 
             RedirectToActionResult redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             redirectToActionResult.ControllerName.Should().Be("System");
-            redirectToActionResult.ActionName.Should().Be("Index");            
+            redirectToActionResult.ActionName.Should().Be("Index");
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Sonic.Tests.Controllers
             IActionResult result = controller.Edit(entity);
 
             RedirectToActionResult redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            redirectToActionResult.ControllerName.Should().Be("System");                        
+            redirectToActionResult.ControllerName.Should().Be("System");
             redirectToActionResult.ActionName.Should().Be("Index");
             repository.GetAll().Should().HaveCount(2);
             repository.GetById(2).Name.Should().Be("App 2");
@@ -126,7 +126,7 @@ namespace Sonic.Tests.Controllers
 
             bool valid = Validator.TryValidateObject(entity, validationContext, validationResult, true);
 
-            Assert.False(valid);
+            valid.Should().BeFalse();
             var failure = Assert.Single(validationResult, x => x.ErrorMessage == "The Name field is required.");
             Assert.Single(failure.MemberNames, x => x == "Name");
         }
