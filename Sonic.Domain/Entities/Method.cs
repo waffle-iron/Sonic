@@ -1,10 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sonic.Domain.Entities
 {
-    public class Role
+    public class Method
     {
-        public int RoleId { get; set; }
+        public int MethodId { get; set; }
 
         [Required(ErrorMessage = "The Name field is required.")]
         public string Name { get; set; }

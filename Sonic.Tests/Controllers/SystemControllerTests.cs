@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Sonic.Domain.Abstract;
 using Sonic.Tests.Concrete;
 using Sonic.WebUI.Controllers;
@@ -28,9 +29,8 @@ namespace Sonic.Tests.Controllers
             IActionResult result = controller.Index();
 
             ViewResult viewResult = Assert.IsType<ViewResult>(result);
-            IEnumerable<Domain.Entities.System> model =
-                Assert.IsAssignableFrom<IEnumerable<Domain.Entities.System>>(viewResult.ViewData.Model);
-            Assert.Equal(2, model.Count());
+            IEnumerable<Domain.Entities.System> model = Assert.IsAssignableFrom<IEnumerable<Domain.Entities.System>>(viewResult.ViewData.Model);
+            model.Should().HaveCount(2);
         }
 
         [Fact]
@@ -43,8 +43,8 @@ namespace Sonic.Tests.Controllers
             IActionResult result = controller.Edit(3);
 
             RedirectToActionResult redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("System", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
+            redirectToActionResult.ControllerName.Should().Be("System");
+            redirectToActionResult.ActionName.Should().Be("Index");            
         }
 
         [Fact]
@@ -56,9 +56,8 @@ namespace Sonic.Tests.Controllers
             IActionResult result = controller.Edit(1);
 
             ViewResult viewResult = Assert.IsType<ViewResult>(result);
-            Domain.Entities.System model =
-                Assert.IsAssignableFrom<Domain.Entities.System>(viewResult.ViewData.Model);
-            Assert.Equal("App 1", model.Name);
+            Domain.Entities.System model = Assert.IsAssignableFrom<Domain.Entities.System>(viewResult.ViewData.Model);
+            model.Name.Should().Be("App 1");
         }
 
         [Fact]
@@ -69,10 +68,9 @@ namespace Sonic.Tests.Controllers
             IActionResult result = controller.Edit(0);
 
             ViewResult viewResult = Assert.IsType<ViewResult>(result);
-            Domain.Entities.System model =
-                Assert.IsAssignableFrom<Domain.Entities.System>(viewResult.ViewData.Model);
-            Assert.NotNull(model.Name);
-            Assert.Equal(0, model.SystemId);
+            Domain.Entities.System model = Assert.IsAssignableFrom<Domain.Entities.System>(viewResult.ViewData.Model);
+            model.Name.Should().NotBeNull();
+            model.SystemId.Should().Be(0);
         }
 
         [Fact]
@@ -85,10 +83,10 @@ namespace Sonic.Tests.Controllers
             IActionResult result = controller.Edit(entity);
 
             RedirectToActionResult redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("System", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-            Assert.Equal(2, repository.GetAll().Count());
-            Assert.Equal("App 2", repository.GetById(2).Name);
+            redirectToActionResult.ControllerName.Should().Be("System");                        
+            redirectToActionResult.ActionName.Should().Be("Index");
+            repository.GetAll().Should().HaveCount(2);
+            repository.GetById(2).Name.Should().Be("App 2");
         }
 
         [Fact]
@@ -102,9 +100,9 @@ namespace Sonic.Tests.Controllers
             IActionResult result = controller.Edit(entity);
 
             RedirectToActionResult redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("System", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-            Assert.Equal("Test", repository.GetById(2).Name);
+            redirectToActionResult.ControllerName.Should().Be("System");
+            redirectToActionResult.ActionName.Should().Be("Index");
+            repository.GetById(2).Name.Should().Be("Test");
         }
 
         [Fact]
@@ -116,7 +114,7 @@ namespace Sonic.Tests.Controllers
 
             IActionResult result = controller.Edit(entity);
 
-            Assert.Equal(entity.Name.Trim(), repository.GetById(0).Name);
+            entity.Name.Trim().Should().Be(repository.GetById(0).Name);
         }
 
         [Fact]
@@ -143,9 +141,9 @@ namespace Sonic.Tests.Controllers
             IActionResult result = controller.Delete(1);
 
             RedirectToActionResult redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("System", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-            Assert.Equal(1, repository.GetAll().Count());
+            redirectToActionResult.ControllerName.Should().Be("System");
+            redirectToActionResult.ActionName.Should().Be("Index");
+            repository.GetAll().Should().HaveCount(1);
         }
     }
 }
