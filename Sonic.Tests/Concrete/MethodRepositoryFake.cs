@@ -14,8 +14,7 @@ namespace Sonic.Tests.Concrete
 
         public Method GetById(int id)
         {
-            throw new NotImplementedException();
-            //return storage.FirstOrDefault(p => p.MethodId == id);
+            return _storage.FirstOrDefault(p => p.MethodId == id);
         }
 
         public bool Add(Method item)
@@ -27,12 +26,18 @@ namespace Sonic.Tests.Concrete
 
         public bool Update(Method item)
         {
-            throw new NotImplementedException();
+            var entity = _storage.FirstOrDefault(p => p.MethodId == item.MethodId);
+            entity.Name = item.Name;
+
+            return true;
         }
 
         public bool Remove(int id)
         {
-            throw new NotImplementedException();
+            var entity = _storage.FirstOrDefault(p => p.MethodId == id);
+            _storage.Remove(entity);
+
+            return true;
         }        
     }
 }

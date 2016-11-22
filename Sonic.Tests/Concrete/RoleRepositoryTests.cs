@@ -35,6 +35,7 @@ namespace Sonic.Tests.Concrete
             Repository.GetById(2).Name.Should().Be("App 1 - user");
         }
 
+        [Fact]
         public void add_role()
         {
             var system = new Domain.Entities.System() { SystemId = 1, Name = "App 1" };
