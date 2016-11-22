@@ -1,30 +1,28 @@
 ﻿using Sonic.Domain.Abstract;
 using Sonic.Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 
 namespace Sonic.Tests.Concrete
 {
     public class SystemRepositoryTests
     {
-        private readonly ICrudRepository<Domain.Entities.System> repository = null;
+        private readonly ICrudRepository<Domain.Entities.System> _repository;
 
         public SystemRepositoryTests()
         {
-            repository = new SystemRepositoryFake();
+            _repository = new SystemRepositoryFake();
         }
 
         [Fact]
         public void get_all()
         {
-            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
-            repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
-            repository.Add(new Domain.Entities.System() { SystemId = 3, Name = "App 3" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 3, Name = "App 3" });
 
-            Assert.Equal(3, repository.GetAll().Count());
+            _repository.All.Should().HaveCount(3);
         }
 
         [Fact]
@@ -34,19 +32,19 @@ namespace Sonic.Tests.Concrete
             system.Roles.Add(new Role() { RoleId = 1, Name = "Admin", SystemId = 1 });
             system.Roles.Add(new Role() { RoleId = 2, Name = "User", SystemId = 1 });
 
-            repository.Add(system);
+            _repository.Add(system);
 
-            Assert.Equal(2, system.Roles.Count);
+            _repository.GetById(1).Roles.Should().HaveCount(2);
         }
 
         [Fact]
         public void get_by_id()
         {
-            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
-            repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
-            repository.Add(new Domain.Entities.System() { SystemId = 3, Name = "App 3" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 3, Name = "App 3" });
 
-            Assert.Equal("App 2", repository.GetById(2).Name);
+            _repository.GetById(2).Name.Should().Be("App 2");
         }
 
         [Fact]
@@ -56,76 +54,76 @@ namespace Sonic.Tests.Concrete
             system.Roles.Add(new Role() { RoleId = 1, Name = "Admin", SystemId = 1 });
             system.Roles.Add(new Role() { RoleId = 2, Name = "User", SystemId = 1 });
 
-            repository.Add(system);
+            _repository.Add(system);
 
-            Assert.Equal("User", system.Roles.FirstOrDefault(p => p.RoleId == 2).Name);
+            system.Roles.FirstOrDefault(p => p.RoleId == 2).Name.Should().Be("User");
         }
 
         [Fact]
-        public void add()
+        public void add_system()
         {
-            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
 
-            Assert.Equal(1, repository.GetAll().Count());
+            _repository.All.Should().HaveCount(1);
         }
 
         [Fact]
         public void add_roles_to_system()
         {
             var system = new Domain.Entities.System() { SystemId = 1, Name = "App" };
-            repository.Add(system);
+            _repository.Add(system);
             var adminRole = new Role() { RoleId = 1, Name = "Admin", SystemId = 1 };
             var userRole = new Role() { RoleId = 2, Name = "User", SystemId = 1 };
 
-            repository.GetById(1).Roles.Add(adminRole);
-            repository.GetById(1).Roles.Add(userRole);
+            _repository.GetById(1).Roles.Add(adminRole);
+            _repository.GetById(1).Roles.Add(userRole);
 
-            Assert.Equal("User", system.Roles.FirstOrDefault(p => p.RoleId == 2).Name);
-            Assert.Equal(2, repository.GetById(1).Roles.Count);
+            system.Roles.FirstOrDefault(p => p.RoleId == 2).Name.Should().Be("User");
+            _repository.GetById(1).Roles.Should().HaveCount(2);
         }
 
         [Fact]
-        public void update()
+        public void update_system()
         {
-            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
-            repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
-            repository.Add(new Domain.Entities.System() { SystemId = 3, Name = "App 3" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 3, Name = "App 3" });
 
-            Domain.Entities.System system = repository.GetById(2);
+            var system = _repository.GetById(2);
             system.Name = "Test";
-            repository.Update(system);
+            _repository.Update(system);
 
-            Assert.Equal("Test", repository.GetById(2).Name);
+            _repository.GetById(2).Name.Should().Be("Test");
         }
 
         [Fact]
         public void update_role_in_system()
         {
             var system = new Domain.Entities.System() { SystemId = 1, Name = "App" };
-            repository.Add(system);
+            _repository.Add(system);
             var adminRole = new Role() { RoleId = 1, Name = "Admin", SystemId = 1 };
             var userRole = new Role() { RoleId = 2, Name = "User", SystemId = 1 };
 
-            Domain.Entities.System systemUpdate = repository.GetById(1);
+            var systemUpdate = _repository.GetById(1);
             systemUpdate.Roles.Add(adminRole);
             systemUpdate.Roles.Add(userRole);
-            repository.Update(systemUpdate);
+            _repository.Update(systemUpdate);
 
-            var testRole = repository.GetById(1).Roles.FirstOrDefault(p => p.RoleId == 2);
-            Assert.Equal(1, testRole.SystemId);
-            Assert.Equal("App", testRole.System.Name);
+            var testRole = _repository.GetById(1).Roles.FirstOrDefault(p => p.RoleId == 2);
+            testRole.SystemId.Should().Be(1);
+            testRole.System.Name.Should().Be("App");
         }
 
         [Fact]
-        public void remove()
+        public void remove_system()
         {
-            repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
-            repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
-            repository.Add(new Domain.Entities.System() { SystemId = 3, Name = "App 3" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
+            _repository.Add(new Domain.Entities.System() { SystemId = 3, Name = "App 3" });
 
-            repository.Remove(2);
+            _repository.Remove(2);
 
-            Assert.Equal(2, repository.GetAll().Count());
+            _repository.All.Should().HaveCount(2);
         }
     }
 }

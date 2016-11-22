@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Sonic.Domain.Abstract
 {
     public interface ICrudRepository<T>
     {
-        IEnumerable<T> GetAll();
+        IEnumerable<T> All { get; }
+
         T GetById(int id);
         bool Add(T item);
         bool Update(T item);

@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Sonic.Domain.Abstract;
 
 namespace Sonic.WebUI.Controllers
 {
     public class SystemController : Controller
     {
-        private readonly ICrudRepository<Domain.Entities.System> systemRepository = null;
+        private readonly ICrudRepository<Domain.Entities.System> _systemRepository;
 
         public SystemController(ICrudRepository<Domain.Entities.System> systemRepository)
         {
-            this.systemRepository = systemRepository;
+            _systemRepository = systemRepository;
         }
 
         public IActionResult Index()
         {
-            return View(systemRepository.GetAll());
+            return View(_systemRepository.All);
         }
 
         [HttpGet]
@@ -29,7 +25,7 @@ namespace Sonic.WebUI.Controllers
                 return View(new Domain.Entities.System() { SystemId = 0, Name = string.Empty });
             }
 
-            Domain.Entities.System entity = systemRepository.GetById(id);
+            var entity = _systemRepository.GetById(id);
             if (entity == null)
             {
                 return RedirectToAction("Index", "System");
@@ -38,37 +34,34 @@ namespace Sonic.WebUI.Controllers
             return View(entity);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Edit(Domain.Entities.System system)
         {
-            if (ModelState.IsValid)
-            {
-                Domain.Entities.System entity = systemRepository.GetById(system.SystemId);
-                system.Name = system.Name.Trim();
-                if (entity == null)
-                {
-                    systemRepository.Add(system);
-                }
-                else
-                {
-                    systemRepository.Update(system);
-                }
+            if (!ModelState.IsValid)
+                return View(system);
 
-                return RedirectToAction("Index", "System");
+            system.Name = system.Name.Trim();
+
+            var entity = _systemRepository.GetById(system.SystemId);                
+            if (entity == null)
+            {
+                _systemRepository.Add(system);
+            }
+            else
+            {
+                _systemRepository.Update(system);
             }
 
-            return View(system);
+            return RedirectToAction("Index", "System");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            Domain.Entities.System entity = systemRepository.GetById(id);
+            var entity = _systemRepository.GetById(id);
             if (entity != null)
             {
-                systemRepository.Remove(id);
+                _systemRepository.Remove(id);
             }
 
             return RedirectToAction("Index", "System");

@@ -3,18 +3,14 @@ using Sonic.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sonic.Tests.Concrete
 {
     public class MethodRepositoryFake : ICrudRepository<Method>
     {
-        private List<Method> storage = new List<Method>();
+        private readonly List<Method> _storage = new List<Method>();
 
-        public IEnumerable<Method> GetAll()
-        {
-            return storage.AsEnumerable();
-        }
+        public IEnumerable<Method> All => _storage.AsEnumerable();
 
         public Method GetById(int id)
         {
@@ -24,7 +20,7 @@ namespace Sonic.Tests.Concrete
 
         public bool Add(Method item)
         {
-            storage.Add(item);
+            _storage.Add(item);
 
             return true;
         }
