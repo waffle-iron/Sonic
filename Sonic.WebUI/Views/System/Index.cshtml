@@ -1,0 +1,33 @@
+﻿@model System.Collections.Generic.IEnumerable<Sonic.Domain.Entities.System>
+
+@{
+    ViewData["Title"] = "Systems";
+}
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+<div>
+    <a asp-action="Edit" class="btn btn-default btn-sm">Create</a>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var system in Model)
+    {
+        <tr>
+            <td>@system.SystemId</td>
+            <td>@system.Name</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@system.SystemId" asp class="btn btn-default btn-sm">Edit</a>
+                <a asp-action="Delete" asp-route-id="@system.SystemId" asp class="btn btn-default btn-sm">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

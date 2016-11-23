@@ -18,14 +18,9 @@ namespace Sonic.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int id = 0)
         {
-            if (id == 0)
-            {
-                return View(new Domain.Entities.System() { SystemId = 0, Name = string.Empty });
-            }
-
-            var entity = _systemRepository.GetById(id);
+            var entity = id != 0 ? _systemRepository.GetById(id) : new Domain.Entities.System() {SystemId = 0, Name = string.Empty};
             if (entity == null)
             {
                 return RedirectToAction("Index", "System");

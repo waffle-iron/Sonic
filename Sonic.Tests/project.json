@@ -4,6 +4,7 @@
   "dependencies": {
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
     "FluentAssertions": "4.17.0",
+    "FluentAssertions.AspNetCore.Mvc": "0.7.0-beta1",
     "Sonic.Domain": "1.0.0-*",
     "Sonic.WebAPI": "1.0.0-*",
     "Sonic.WebUI": "1.0.0-*",

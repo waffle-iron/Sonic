@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using FluentAssertions.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Sonic.Domain.Abstract;
 using Sonic.Tests.Concrete;
@@ -27,9 +28,7 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Index();
 
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IEnumerable<Domain.Entities.System>>(viewResult.ViewData.Model);
-            model.Should().HaveCount(2);
+            result.Should().BeViewResult().ModelAs<IEnumerable<Domain.Entities.System>>().Should().HaveCount(2);
         }
 
         [Fact]
@@ -54,9 +53,7 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Edit(1);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<Domain.Entities.System>(viewResult.ViewData.Model);
-            model.Name.Should().Be("App 1");
+            result.Should().BeViewResult().ModelAs<Domain.Entities.System>().Name.Should().Be("App 1");
         }
 
         [Fact]
@@ -66,10 +63,8 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Edit(0);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<Domain.Entities.System>(viewResult.ViewData.Model);
-            model.Name.Should().NotBeNull();
-            model.SystemId.Should().Be(0);
+            result.Should().BeViewResult().ModelAs<Domain.Entities.System>().Name.Should().NotBeNull();
+            result.Should().BeViewResult().ModelAs<Domain.Entities.System>().SystemId.Should().Be(0);
         }
 
         [Fact]

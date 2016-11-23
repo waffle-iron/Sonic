@@ -1,6 +1,5 @@
 ﻿using Sonic.Domain.Abstract;
 using Sonic.Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
