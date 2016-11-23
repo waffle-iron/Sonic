@@ -1,12 +1,13 @@
 ﻿using FluentAssertions;
+using FluentAssertions.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Sonic.Domain.Abstract;
 using Sonic.Domain.Entities;
-using Sonic.Tests.Concrete;
 using Sonic.WebUI.Controllers;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Sonic.Tests.Concrete.Fakes;
 using Xunit;
 
 namespace Sonic.Tests.Controllers
@@ -38,11 +39,8 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Index(systemApp2.SystemId);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IEnumerable<Role>>(viewResult.ViewData.Model);
-            model.Should().HaveCount(2);
-            model.First().SystemId.Should().Be(2);
-            model.ToList()[1].Name.Should().Be("userTest");
+            result.Should().BeViewResult().ModelAs<IEnumerable<Role>>().Should().HaveCount(2);
+            result.Should().BeViewResult().ModelAs<IEnumerable<Role>>().First(p => p.RoleId == 4).Name.Should().Be("userTest");
         }
 
         [Fact]
@@ -81,10 +79,7 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Create(1);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
-            Assert.Equal(1, model.SystemId);
-            Assert.Equal("App 1", model.System.Name);
+            result.Should().BeViewResult().ModelAs<Role>().System.Name.Should().Be("App 1");
         }
 
         [Fact]
@@ -145,12 +140,8 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Edit(2);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
-            Assert.Equal(1, model.SystemId);
-            Assert.Equal("App 1", model.System.Name);
-            Assert.Equal(2, model.RoleId);
-            Assert.Equal("user", model.Name);
+            result.Should().BeViewResult().ModelAs<Role>().System.Name.Should().Be("App 1");
+            result.Should().BeViewResult().ModelAs<Role>().Name.Should().Be("user");
         }
 
         [Fact]

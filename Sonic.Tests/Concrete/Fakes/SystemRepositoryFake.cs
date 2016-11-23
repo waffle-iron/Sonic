@@ -1,8 +1,8 @@
-﻿using Sonic.Domain.Abstract;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Sonic.Domain.Abstract;
 
-namespace Sonic.Tests.Concrete
+namespace Sonic.Tests.Concrete.Fakes
 {
     public class SystemRepositoryFake : ICrudRepository<Domain.Entities.System>
     {

@@ -1,9 +1,10 @@
 ﻿using FluentAssertions;
 using Sonic.Domain.Abstract;
 using Sonic.Domain.Entities;
+using Sonic.Tests.Concrete.Fakes;
 using Xunit;
 
-namespace Sonic.Tests.Concrete
+namespace Sonic.Tests.Concrete.Tests
 {    
     public class MethodRepositoryTests
     {

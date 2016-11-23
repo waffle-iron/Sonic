@@ -1,11 +1,12 @@
 ﻿using FluentAssertions;
+using FluentAssertions.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Sonic.Domain.Abstract;
 using Sonic.Domain.Entities;
-using Sonic.Tests.Concrete;
 using Sonic.WebUI.Controllers;
 using System.Collections.Generic;
 using System.Linq;
+using Sonic.Tests.Concrete.Fakes;
 using Xunit;
 
 namespace Sonic.Tests.Controllers
@@ -37,11 +38,13 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Index(systemApp2.SystemId);
 
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IEnumerable<Method>>(viewResult.ViewData.Model);
-            model.Should().HaveCount(3);
-            model.FirstOrDefault().SystemId.Should().Be(2);
-            model.FirstOrDefault(p => p.MethodId == 3).Name.Should().Be("MethodTwo");
+            result.Should().BeViewResult().ModelAs<IEnumerable<Method>>().Should().HaveCount(3);
+            result.Should()
+                .BeViewResult()
+                .ModelAs<IEnumerable<Method>>()
+                .First(p => p.MethodId == 3)
+                .Name.Should()
+                .Be("MethodTwo");
         }
     }
 }

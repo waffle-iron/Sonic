@@ -6,6 +6,7 @@ using Sonic.Tests.Concrete;
 using Sonic.WebUI.Controllers;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Sonic.Tests.Concrete.Fakes;
 using Xunit;
 
 namespace Sonic.Tests.Controllers

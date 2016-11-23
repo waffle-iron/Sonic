@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Sonic.Domain.Abstract;
 using Sonic.Domain.Entities;
-using System.Linq;
 
-namespace Sonic.Tests.Concrete
+namespace Sonic.Tests.Concrete.Fakes
 {
     public class RoleRepositoryFake : ICrudRepository<Role>
     {
