@@ -37,8 +37,7 @@ namespace Sonic.WebUI.Controllers
 
             system.Name = system.Name.Trim();
 
-            var entity = _systemRepository.GetById(system.SystemId);                
-            if (entity == null)
+            if (system.SystemId == 0)
             {
                 _systemRepository.Add(system);
             }
@@ -50,8 +49,20 @@ namespace Sonic.WebUI.Controllers
             return RedirectToAction("Index", "System");
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [ActionName("Delete")]
         public IActionResult Delete(int id)
+        {
+            var entity = _systemRepository.GetById(id);
+            if (entity == null)
+            {
+                return RedirectToAction("Index", "System");
+            }
+
+            return View("Delete", entity);
+        }
+
+        [ActionName("Delete"), HttpPost, ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
         {
             var entity = _systemRepository.GetById(id);
             if (entity != null)

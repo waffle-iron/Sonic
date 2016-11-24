@@ -50,6 +50,7 @@ namespace Sonic.Domain.Concrete
                 return false;
 
             _dbContext.Remove(entity);
+            _dbContext.SaveChanges();
             return true;
         }
     }
