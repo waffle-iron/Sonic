@@ -1,8 +1,6 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Mvc;
-using Microsoft.AspNetCore.Mvc;
 using Sonic.Domain.Abstract;
-using Sonic.Tests.Concrete;
 using Sonic.WebUI.Controllers;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -41,9 +39,7 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Edit(3);
 
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            redirectToActionResult.ControllerName.Should().Be("System");
-            redirectToActionResult.ActionName.Should().Be("Index");
+            result.Should().BeRedirectToRouteResult().WithAction("Index").WithController("System");
         }
 
         [Fact]
@@ -72,16 +68,13 @@ namespace Sonic.Tests.Controllers
         public void edit_post_add()
         {
             var controller = new SystemController(_repository);
-            _repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
-            var entity = new Domain.Entities.System() { SystemId = 2, Name = "App 2" };
+            var entity = new Domain.Entities.System() { SystemId = 0, Name = "App" };
 
             var result = controller.Edit(entity);
 
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            redirectToActionResult.ControllerName.Should().Be("System");
-            redirectToActionResult.ActionName.Should().Be("Index");
-            _repository.All.Should().HaveCount(2);
-            _repository.GetById(2).Name.Should().Be("App 2");
+            result.Should().BeRedirectToRouteResult().WithAction("Index").WithController("System");
+            _repository.All.Should().HaveCount(1);
+            _repository.GetById(0).Name.Should().Be("App");
         }
 
         [Fact]
@@ -92,11 +85,9 @@ namespace Sonic.Tests.Controllers
             _repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
             var entity = new Domain.Entities.System() { SystemId = 2, Name = "Test" };
 
-            IActionResult result = controller.Edit(entity);
+            var result = controller.Edit(entity);
 
-            RedirectToActionResult redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            redirectToActionResult.ControllerName.Should().Be("System");
-            redirectToActionResult.ActionName.Should().Be("Index");
+            result.Should().BeRedirectToRouteResult().WithAction("Index").WithController("System");
             _repository.GetById(2).Name.Should().Be("Test");
         }
 
@@ -133,11 +124,9 @@ namespace Sonic.Tests.Controllers
             _repository.Add(new Domain.Entities.System() { SystemId = 1, Name = "App 1" });
             _repository.Add(new Domain.Entities.System() { SystemId = 2, Name = "App 2" });
 
-            var result = controller.Delete(1);
+            var result = controller.DeleteConfirmed(1);
 
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            redirectToActionResult.ControllerName.Should().Be("System");
-            redirectToActionResult.ActionName.Should().Be("Index");
+            result.Should().BeRedirectToRouteResult().WithAction("Index").WithController("System");
             _repository.All.Should().HaveCount(1);
         }
     }

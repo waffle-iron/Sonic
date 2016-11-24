@@ -1,0 +1,33 @@
+﻿@model Sonic.WebUI.Models.RoleModel
+
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<h4>@ViewData["Title"] in system: @Model.System.Name</h4>
+<hr />
+<div>
+    <a asp-action="Create" asp-route-id="@Model.System.SystemId" class="btn btn-default btn-sm">Create</a>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Roles)
+    {
+        <tr>
+            <td>@item.RoleId</td>
+            <td>@item.Name</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RoleId" asp class="btn btn-default btn-sm">Edit</a>
+                <a asp-action="Delete" asp-route-id="@item.RoleId" asp class="btn btn-default btn-sm">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

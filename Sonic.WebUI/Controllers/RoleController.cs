@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sonic.Domain.Abstract;
 using Sonic.Domain.Entities;
+using Sonic.WebUI.Models;
 
 namespace Sonic.WebUI.Controllers
 {
@@ -17,25 +18,28 @@ namespace Sonic.WebUI.Controllers
         }
 
         [NonAction]
-        private bool IsSystemExist(int id)
-        {
-            return _systemRepository.GetById(id) != null;
-        }
-
-        [NonAction]
         private IActionResult RedirectToSystems()
         {
-            return RedirectToAction("Index", "System");
+            return RedirectToRoute("default", new { action = "Index", controller = "System" });
         }
 
         public IActionResult Index(int id)
         {
-            return IsSystemExist(id) ? View(_roleRepository.All.Where(p => p.SystemId == id)) : RedirectToSystems();
+            var model = new RoleModel {System = _systemRepository.GetById(id)};
+
+            if (model.System == null)
+            {
+                return RedirectToSystems();
+            }
+
+            model.Roles = _roleRepository.All.Where(p => p.SystemId == id);
+            return View(model);
         }
 
         public IActionResult Create(int id)
         {
-            if (!IsSystemExist(id))
+            var system = _systemRepository.GetById(id);
+            if (system == null)
             {
                 return RedirectToSystems();
             }
@@ -45,7 +49,7 @@ namespace Sonic.WebUI.Controllers
                 RoleId = 0,
                 Name = string.Empty,
                 SystemId = id,
-                System = _systemRepository.GetById(id)
+                System = system
             };
             return View(entity);
         }
@@ -61,13 +65,14 @@ namespace Sonic.WebUI.Controllers
             role.Name = role.Name.Trim();
             _roleRepository.Add(role);
 
-            return RedirectToAction("Index", "Role");
+            return RedirectToRoute("default", new { controller = "Role", action = "Index", id = role.SystemId });
+
         }
 
         public IActionResult Edit(int id)
         {
             var entity = _roleRepository.GetById(id);
-            return entity != null ? (IActionResult) View(entity) : RedirectToAction("Index", "Role");
+            return entity == null ? RedirectToSystems() : View(entity);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -81,7 +86,8 @@ namespace Sonic.WebUI.Controllers
             role.Name = role.Name.Trim();
             _roleRepository.Update(role);
 
-            return RedirectToAction("Index", "Role");
+            return RedirectToRoute("default", new { controller = "Role", action = "Index", id = role.SystemId });
+
         }
 
         [HttpPost]
@@ -90,11 +96,12 @@ namespace Sonic.WebUI.Controllers
             var entity = _roleRepository.GetById(id);
             if (entity == null)
             {
-                return RedirectToAction("Index", "Role");
+                return RedirectToSystems();
             }
 
             _roleRepository.Remove(id);
-            return RedirectToAction("Index", "Role");
+            return RedirectToRoute("default", new { controller = "Role", action = "Index", id = entity.SystemId });
+
         }
     }
 }

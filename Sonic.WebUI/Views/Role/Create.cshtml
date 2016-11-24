@@ -1,0 +1,35 @@
+﻿@model Sonic.Domain.Entities.Role
+
+@{
+    ViewData["Title"] = "Create role";
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input asp-for="RoleId" type="hidden" />
+        <input asp-for="SystemId" type="hidden" />
+
+
+        <div class="form-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index" class="btn btn-default">Back</a>
+</div>

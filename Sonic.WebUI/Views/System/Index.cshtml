@@ -1,4 +1,4 @@
-﻿@model System.Collections.Generic.IEnumerable<Sonic.Domain.Entities.System>
+﻿@model IEnumerable<Sonic.Domain.Entities.System>
 
 @{
     ViewData["Title"] = "Systems";
@@ -18,14 +18,15 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var system in Model)
+    @foreach (var item in Model)
     {
         <tr>
-            <td>@system.SystemId</td>
-            <td>@system.Name</td>
+            <td>@item.SystemId</td>
+            <td>@item.Name</td>
             <td>
-                <a asp-action="Edit" asp-route-id="@system.SystemId" asp class="btn btn-default btn-sm">Edit</a>
-                <a asp-action="Delete" asp-route-id="@system.SystemId" asp class="btn btn-default btn-sm">Delete</a>
+                <a asp-action="Index" asp-controller="Role" asp-route-id="@item.SystemId" asp class="btn btn-default btn-sm">Roles</a>
+                <a asp-action="Edit" asp-route-id="@item.SystemId" asp class="btn btn-default btn-sm">Edit</a>
+                <a asp-action="Delete" asp-route-id="@item.SystemId" asp class="btn btn-default btn-sm">Delete</a>
             </td>
         </tr>
     }

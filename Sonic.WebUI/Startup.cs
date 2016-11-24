@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sonic.Domain.Abstract;
 using Sonic.Domain.Concrete;
+using Sonic.Domain.Entities;
 
 namespace Sonic.WebUI
 {
@@ -32,6 +33,7 @@ namespace Sonic.WebUI
             });
 
             services.AddSingleton<ICrudRepository<Domain.Entities.System>, SystemRepository>();
+            services.AddSingleton<ICrudRepository<Role>, RoleRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

@@ -23,7 +23,7 @@ namespace Sonic.WebUI.Controllers
             var entity = id != 0 ? _systemRepository.GetById(id) : new Domain.Entities.System() {SystemId = 0, Name = string.Empty};
             if (entity == null)
             {
-                return RedirectToAction("Index", "System");
+                return RedirectToRoute("default", new {action = "Index", controller = "System"});
             }
 
             return View(entity);
@@ -33,10 +33,11 @@ namespace Sonic.WebUI.Controllers
         public IActionResult Edit(Domain.Entities.System system)
         {
             if (!ModelState.IsValid)
+            {
                 return View(system);
+            }
 
             system.Name = system.Name.Trim();
-
             if (system.SystemId == 0)
             {
                 _systemRepository.Add(system);
@@ -46,7 +47,7 @@ namespace Sonic.WebUI.Controllers
                 _systemRepository.Update(system);
             }
 
-            return RedirectToAction("Index", "System");
+            return RedirectToRoute("default", new {action = "Index", controller = "System"});
         }
 
         [ActionName("Delete")]
@@ -55,7 +56,7 @@ namespace Sonic.WebUI.Controllers
             var entity = _systemRepository.GetById(id);
             if (entity == null)
             {
-                return RedirectToAction("Index", "System");
+                return RedirectToRoute("default", new { action = "Index", controller = "System" });
             }
 
             return View("Delete", entity);
@@ -70,7 +71,7 @@ namespace Sonic.WebUI.Controllers
                 _systemRepository.Remove(id);
             }
 
-            return RedirectToAction("Index", "System");
+            return RedirectToRoute("default", new { action = "Index", controller = "System" });
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Mvc;
-using Microsoft.AspNetCore.Mvc;
 using Sonic.Domain.Abstract;
 using Sonic.Domain.Entities;
 using Sonic.WebUI.Controllers;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Sonic.Tests.Concrete.Fakes;
+using Sonic.WebUI.Models;
 using Xunit;
 
 namespace Sonic.Tests.Controllers
@@ -37,10 +37,11 @@ namespace Sonic.Tests.Controllers
             _repository.Add(new Role() { RoleId = 3, Name = "adminTest", SystemId = 2, System = systemApp2 });
             _repository.Add(new Role() { RoleId = 4, Name = "userTest", SystemId = 2, System = systemApp2 });
 
-            var result = controller.Index(systemApp2.SystemId);
+            var result = controller.Index(2);
 
-            result.Should().BeViewResult().ModelAs<IEnumerable<Role>>().Should().HaveCount(2);
-            result.Should().BeViewResult().ModelAs<IEnumerable<Role>>().First(p => p.RoleId == 4).Name.Should().Be("userTest");
+            result.Should().BeViewResult().ModelAs<RoleModel>().Roles.Should().HaveCount(2);
+            result.Should().BeViewResult().ModelAs<RoleModel>().System.Name.Should().Be("App 2");
+            result.Should().BeViewResult().ModelAs<RoleModel>().Roles.First(p => p.RoleId == 4).Name.Should().Be("userTest");
         }
 
         [Fact]
@@ -52,9 +53,7 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Index(3);
 
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            redirectToActionResult.ControllerName.Should().Be("System");
-            redirectToActionResult.ActionName.Should().Be("Index");
+            result.Should().BeRedirectToRouteResult().WithAction("Index").WithController("System");
         }
 
         [Fact]
@@ -90,9 +89,7 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Create(2);
 
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("System", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
+            result.Should().BeRedirectToRouteResult().WithAction("Index").WithController("System");
         }
 
         [Fact]
@@ -106,12 +103,10 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Create(new Role() { RoleId = 2, SystemId = 1, Name = "user", System = system });
 
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Role", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-            Assert.Equal(2, _repository.All.Count());
-            Assert.Equal("App 1", _repository.GetById(2).System.Name);
-            Assert.Equal("user", _repository.GetById(2).Name);
+            result.Should().BeRedirectToRouteResult().WithAction("Index").WithController("Role");
+            _repository.All.Count().Should().Be(2);
+            _repository.GetById(2).System.Name.Should().Be("App 1");
+            _repository.GetById(2).Name.Should().Be("user");
         }
 
         [Fact]
@@ -126,7 +121,7 @@ namespace Sonic.Tests.Controllers
             var entity = new Role() { RoleId = 2, SystemId = 1, Name = "  user  ", System = system };
             controller.Create(entity);
 
-            Assert.Equal(entity.Name.Trim(), _repository.GetById(2).Name);
+            _repository.GetById(2).Name.Should().Be("user");
         }
 
         [Fact]
@@ -154,9 +149,7 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Edit(3);
 
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Role", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
+            result.Should().BeRedirectToRouteResult().WithAction("Index").WithController("System");
         }
 
         [Fact]
@@ -172,11 +165,9 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Edit(entity);
 
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Role", redirectToActionResult.ControllerName);
-            Assert.Equal("Index", redirectToActionResult.ActionName);
-            Assert.Equal(2, _repository.All.Count());
-            Assert.Equal("test", _repository.GetById(2).Name);
+            result.Should().BeRedirectToRouteResult().WithAction("Index").WithController("Role");
+            _repository.All.Count().Should().Be(2);
+            _repository.GetById(2).Name.Should().Be("test");
         }
 
         [Fact]
@@ -192,7 +183,7 @@ namespace Sonic.Tests.Controllers
 
             controller.Edit(entity);
 
-            _repository.GetById(2).Name.Should().Be(entity.Name.Trim());
+            _repository.GetById(2).Name.Should().Be("test");
         }
 
         [Fact]
@@ -206,9 +197,7 @@ namespace Sonic.Tests.Controllers
 
             var result = controller.Delete(2);
 
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            redirectToActionResult.ControllerName.Should().Be("Role");
-            redirectToActionResult.ActionName.Should().Be("Index");
+            result.Should().BeRedirectToRouteResult().WithAction("Index").WithController("Role");
             _repository.All.Should().HaveCount(1);
         }
     }
