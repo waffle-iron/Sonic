@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -25,6 +26,10 @@ namespace Sonic.WebUI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddDbContext<SonicDbContext>(options => {
+                options.UseNpgsql(@"User ID=sonic;Password=Sonic1234!;Host=localhost;Port=5432;Database=sonic;Pooling=true;", b => b.MigrationsAssembly("Sonic.Domain"));
+            });
 
             services.AddSingleton<ICrudRepository<Domain.Entities.System>, SystemRepository>();
         }
