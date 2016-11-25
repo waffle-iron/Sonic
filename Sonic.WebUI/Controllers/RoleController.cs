@@ -32,7 +32,7 @@ namespace Sonic.WebUI.Controllers
                 return RedirectToSystems();
             }
 
-            model.Roles = _roleRepository.All.Where(p => p.SystemId == id);
+            model.Roles = _roleRepository.All.Where(p => p.SystemId == id).OrderBy(p => p.Name);
             return View(model);
         }
 

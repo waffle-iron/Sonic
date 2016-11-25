@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Sonic.Domain.Abstract;
 
 namespace Sonic.WebUI.Controllers
@@ -14,7 +15,7 @@ namespace Sonic.WebUI.Controllers
 
         public IActionResult Index()
         {
-            return View(_systemRepository.All);
+            return View(_systemRepository.All.OrderBy(p => p.Name));
         }
 
         [HttpGet]
