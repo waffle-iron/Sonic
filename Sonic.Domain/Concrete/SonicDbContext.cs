@@ -6,7 +6,10 @@ namespace Sonic.Domain.Concrete
     public class SonicDbContext : DbContext
     {
         public DbSet<Entities.System> Systems { get; set; }
+
         public DbSet<Role> Roles { get; set; }
+
+        public DbSet<Method> Methods { get; set; }
 
         public SonicDbContext(DbContextOptions<SonicDbContext> options) : base(options)
         {

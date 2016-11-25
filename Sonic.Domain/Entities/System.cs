@@ -11,5 +11,7 @@ namespace Sonic.Domain.Entities
         public string Name { get; set; }
 
         public List<Role> Roles { get; set; } = new List<Role>();
+
+        public List<Method> Methods { get; set; } = new List<Method>();
     }
 }

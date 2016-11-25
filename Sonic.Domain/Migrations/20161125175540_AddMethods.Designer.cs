@@ -8,9 +8,10 @@ using Sonic.Domain.Concrete;
 namespace Sonic.Domain.Migrations
 {
     [DbContext(typeof(SonicDbContext))]
-    partial class SonicDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161125175540_AddMethods")]
+    partial class AddMethods
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
